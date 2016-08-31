@@ -7,8 +7,8 @@ var twitterAPI=require('node-twitter-api')
 var session = require('express-session');
 var mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
-//var url= 'mongodb://shikhar97:(xyz123)@ds019076.mlab.com:19076/nightlife'
-var url= 'mongodb://localhost:27017/nightlife'
+var url= 'mongodb://shikhar97:(xyz123)@ds019076.mlab.com:19076/nightlife'
+//var url= 'mongodb://localhost:27017/nightlife'
 mongoose.connect(url);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
