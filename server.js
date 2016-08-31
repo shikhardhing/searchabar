@@ -165,7 +165,7 @@ app.get('/',function (req, res, next) {
     res.sendFile("/index.html");
 });
 
-app.set('port',(process.env.port||8081))
+app.set('port',(process.env.PORT||8081))
 var server = app.listen(app.get('port'), function () {
     var host = 'localhost'
     var port = server.address().port
