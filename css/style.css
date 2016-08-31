@@ -1,0 +1,35 @@
+body{
+}
+#usr{
+	display: inline-block;
+	text-align: center;
+	width:70%;
+	font-size:24px;
+	padding:20px;
+	border-radius: 100px;
+}
+#usr:hover,#usr:focus{
+	box-shadow: inset 0 0 8px 0 rgba(255,255,255,.95)
+}
+.submit,.submit:hover{
+	font-size:18px;
+}
+.submit:hover,.submit:focus{
+	box-shadow: inset 0 0 8px 0 rgba(255,255,255,.95)
+}
+h1{
+	font-size:50px;
+}
+.name{
+	font-size:26px;
+}
+.block{
+	border:2px 2px 0px 2px solid black;
+	height: 140px;
+}
+img{
+	float:left;
+}
+.btn,.btn:hover{
+	border:1px solid black;
+}

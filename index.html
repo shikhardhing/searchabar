@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Nightlife App</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/font-awesome.css">
+</head>
+
+<body>
+
+	<div class="text-center">
+		<h1>Plans tonight?</h1><br>
+		<h2>Enter your city name</h2>
+		<div class="form-group">
+ 			<input type="text" class="form-control" id="usr">
+		</div>
+		<div class="btn submit">Submit</div>
+	</div>
+	<div class="container">
+		<ul class="list" style="list-style: none;">
+		</ul>
+	</div>	
+	<script src="js/jquery-2.1.4.js"></script>
+
+<script >
+$(document).ready(function(){
+	var twitterID;
+	var city;
+	$.ajax({
+		url: '/getcookie',
+		type: 'GET',
+		dataType: 'json'
+	})
+	.done(function(c) {
+		if(!!c.twitterID){
+			console.log(c.twitterID);
+			twitterID=c.twitterID;
+		}
+		if(!!c.city){
+			city=c.city;
+			getrestaurants();
+		}
+	});
+	$(".list").on('click','.linkbtn',function() {
+		console.log("clicked");
+		if(!!twitterID){
+			console.log(this);
+			var resID=$(this).attr('id');
+			console.log(resID);
+			$.post('/api/post/restaurant/'+resID, function(data, textStatus, xhr) {
+				console.log("posted");
+				user(resID);
+			});
+		}
+		else{
+			window.location.href='/login';
+		}
+	});
+
+	function user(restID){
+		$.get('/api/restaurant/'+restID, function(d) {
+			var c=JSON.parse(d)
+			count=c["count"];
+			console.log(restID+' '+count)
+			$('#'+restID+' .go').html(count);
+		});
+	}
+
+	$(".submit").on('click', function() {
+		city=$("#usr").val()
+		$(".list").html("")
+		getrestaurants()
+	});
+	function tohtml(i,data){
+		var show='<li class="block"><img height="135px" width="240px" src="'+data.restaurants[i].restaurant.featured_image+'">'+'<span class="name"><a target="_blank" href="'+data.restaurants[i].restaurant.url+'">'+data.restaurants[i].restaurant.name+'</a></span><div class="linkbtn btn btn-info" id="'+data.restaurants[i].restaurant.id+'"><span class="go"></span> Going</div><p>'+data.restaurants[i].restaurant.location.address+'</p>'+'</li>'
+		$(".list").append(show)
+		user(data.restaurants[i].restaurant.id)
+	}
+
+	function getrestaurants(){
+		console.log(city);
+		$.get('/api/'+city, function(data) {
+			console.log(data)
+			if(data.results_shown==0)
+				$(".list").html("City not found");
+			else{
+				for (var i = 0; i < data.results_shown; i++) {
+					tohtml(i,data);
+				}
+				if(!!twitterID){
+					console.log("having a id")
+					var q='{"place": "'+city+'"}'
+					$.ajax({		
+						url: '/api/postcity',
+						type: 'POST',
+						data: q,
+						contentType:"application/json"
+					})
+					.done(function() {
+						console.log(JSON.parse(q))
+					});
+				}
+			}
+		});
+	}
+	
+});
+</script>    
+</body>
+</html>
